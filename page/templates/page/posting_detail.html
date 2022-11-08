@@ -14,20 +14,13 @@
         <td class="posting__detail__title">{{posting.title}}</td>
         <td class="posting__detail__function">
           <div>
-            <!-- [코드 작성] 글 작성자가 로그인한 사람과 같을 경우에만 버튼이 보이도록 조건문 작성 -->
-            
-              <a class="button" href="{% url 'page:posting_update' posting.id %}">수정</a>
-              <form action="{% url 'page:posting_delete' posting.id %}" method="post" onsubmit="return contentDelete()">
-                {% csrf_token %}
-                <input class="button" type="submit" value="삭제">
-              </form>
-            <!-- [코드 작성] 조건문 종료 -->
-            
+            <a class="button" href="{% url 'page:posting_update' posting.id %}">수정</a>
+            <form action="{% url 'page:posting_delete' posting.id %}" method="post" onsubmit="return contentDelete()">
+              {% csrf_token %}
+              <input class="button" type="submit" value="삭제">
+            </form>
           </div>
         </td>
-      </tr>
-      <tr>
-        <td class="posting__detail__date" colspan="2">작성자: {{posting.author.username}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;작성일 : {{posting.date|date:'Y-m-d A f'}}</td>
       </tr>
       <tr>
         <td class="posting__detail__content" colspan="2">
@@ -68,20 +61,11 @@
             <span class="content__space">{{comment.content|linebreaksbr}}</span>
           </td>
           <td class="posting__comment__delete" rowspan="2">
-            <!-- [코드 작성] 댓글 작성자가 로그인한 사람과 같을 경우에만 버튼이 보이도록 조건문 작성 -->
-
-              <!-- [코드 추가] POST 방식으로 댓글 삭제 후 action을 이용해 url 이름이 comment_delete인 url로 이동 -->
-              <form action="{% url 'page:comment_delete' posting_id=posting.id comment_id=comment.id %}" method="post" onsubmit="return contentDelete()">
-                {% csrf_token %}
-                <input type="submit" value="x">
-              </form>
-            <!-- [코드 작성] 조건문 종료 -->
-            
-          </td>
-        </tr>
-        <tr>
-          <td class="posting__comment__date">
-            {{comment.author.username}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{{comment.date|date:'Y-m-d A f'}}
+            <!-- [코드 추가] POST 방식으로 댓글 삭제 후 action을 이용해 url 이름이 comment_delete인 url로 이동 -->
+            <form action="" method="post" onsubmit="return contentDelete()">
+              {% csrf_token %}
+              <input type="submit" value="x">
+            </form>
           </td>
         </tr>
         <tr>

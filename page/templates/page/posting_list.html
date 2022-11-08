@@ -17,24 +17,18 @@
       <tr>
         <th class="index">번호</th>
         <th class="title">제목</th>
-        <!-- [코드 수정] 주석 풀기 -->
-        <!-- <th class="author">작성자</th> -->
         <th class="date">날짜</th>
       </tr>
       {% for posting in postings reversed %}
         <tr>
           <td class="index">{{forloop.revcounter}}</td>
           <td class="title"><a href="{% url 'page:posting_detail' posting.id %}">{{posting.title}}</a></td>
-          <!-- [코드 수정] 주석 풀기 -->
-          <!-- <td class="author">{{posting.author.username}}</td> -->
           <td class="date">{{posting.date|date:'Y-m-d'}}</td>
         </tr>
       {% empty %}
         <tr>
           <td class="index">-</td>
           <td class="title">글을 작성해주세요.</td>
-          <!-- [코드 수정] 주석 풀기 -->
-          <!-- <td class="author">-</td> -->
           <td class="date">-</td>
         </tr>
       {% endfor %}

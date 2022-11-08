@@ -49,10 +49,6 @@
   /* text-overflow : 넘치는 텍스트 처리 */
   text-overflow: ellipsis;
 }
-.posting__list .author {
-  width: 4rem;
-  text-align: center;
-}
 .posting__list .date {
   width: 6rem;
   text-align: center;
