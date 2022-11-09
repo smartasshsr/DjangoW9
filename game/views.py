@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from random import *
-from .models import Weapon
-# [미션] forms.py의 WeaponForm 불러오기
-from .forms import WeaponForm
+from .models import Weapon, Character
+from .forms import WeaponForm, CharacterForm
 
 # Create your views here.
 win = 0
@@ -53,24 +52,15 @@ def rsp_reset(request):
 
 def weapon_create(request):
     if request.method == 'POST':
-        # [미션] request.POST 방식으로 전달된 값이 저장되는 WeaponForm 객체 생성
-        # [미션] None을 지우고 작성
         weapon_form = WeaponForm(request.POST)
         
-        # [미션] WeaponForm으로 넘어온 값이 유효한지 is_valid()를 이용하여 확인
-        # [미션] None을 지우고 작성
         if weapon_form.is_valid():
-            # [미션] weapon_form을 저장
             weapon_form.save()
             return redirect('game:weapon_list')
     else:
-        # [미션] WeaponForm 객체 생성
-        # [미션] None을 지우고 작성
         weapon_form = WeaponForm()
     
     context = {
-        # [미션] weapon_form을 딕셔너리 형식으로 html에 넘겨주기
-        # [미션] None을 지우고 작성
         'weapon_form': weapon_form,
     }
     return render(request, 'game/weapon_form.html', context)
@@ -78,7 +68,6 @@ def weapon_create(request):
 def weapon_list(request):
     weapons = Weapon.objects.all()
 
-    # [미션] default_weapons 딕셔너리 자유롭게 수정하기 (형식 : {'무기 이름' : 무기 공격력})
     default_weapons = {
         '주먹도끼': 1,
         '수상한 막대기': 7,
@@ -88,17 +77,65 @@ def weapon_list(request):
     }
     
     if len(weapons) == 0:
-        # [미션] 반복문을 이용해 default_weapons의 key값을 name, value값을 power로 Weapon 객체 생성 (Django ORM)
-        # [미션] None을 지우고 작성
         for weapon in default_weapons:
             Weapon.objects.create(
                 name = weapon,
                 power = default_weapons[weapon],
             )
-        # 모든 Weapon 객체들을 다시 불러오기
         weapons = Weapon.objects.all()
 
     context = {
         'weapons': weapons,
     }
     return render(request, 'game/weapon_list.html', context)
+
+# 게임은 하나의 캐릭터로 진행
+def adventure_home(request):
+    # 캐릭터 객체가 하나도 없는 경우
+    if Character.objects.all().count() == 0:
+        if request.method == 'POST':
+            # Character의 weapon 필드에는 비어있는 객체가 저장될 수 있으므로 임시저장할 필요가 없음
+            character_form = CharacterForm(request.POST)
+            character_form.save()
+            return redirect('game:adventure_home')
+        else:
+            character_form = CharacterForm()
+        context = {
+            'character_form': character_form,
+        }
+        return render(request, 'game/character_create.html', context)
+    
+    # 캐릭터가 생성된 경우
+    else:
+        # [코드 수정] Character 모델 중 id가 1인 캐릭터 객체를 가져옴
+        # [코드 수정] None을 지우고 작성
+        character = Character.objects.get(id=2)
+        context = {
+            'character': character,
+        }
+        # [코드 수정] character의 weapon 필드에 아무것도 저장되어 있지 않은 경우
+        # [코드 수정] None을 지우고 작성
+        if character.weapon == None:
+            # [코드 수정] 'game/adventure_new.html'로 이동하도록 코드 작성
+            # [코드 수정] None을 지우고 작성
+            return render(request, 'game/adventure_new.html', context)
+    return render(request, 'game/adventure_home.html', context)
+
+# 캐릭터에게 랜덤으로 무기 장착
+def weapon_get(request):
+    # [코드 수정] Character 모델 중 id가 1인 캐릭터 객체를 가져옴
+    # [코드 수정] None을 지우고 작성
+    character = Character.objects.get(id=2)
+    
+    weapons = Weapon.objects.all()
+    # [코드 수정] random 모듈의 choice 함수를 이용하여 selected_weapon 변수에 저장
+    # [코드 수정] None을 지우고 작성
+    selected_weapon = choice(weapons)
+    
+    character.weapon = selected_weapon
+    character.save()
+
+    context = {
+        'character': character,
+    }
+    return render(request, 'game/adventure_home.html', context)
